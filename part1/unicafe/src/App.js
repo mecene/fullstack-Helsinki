@@ -12,7 +12,7 @@ const Statistics = ({ value }) => {
   console.log(value)
   if ((value.good + value.neutral + value.bad) === 0) {
     return (
-      <p>No value</p>
+      <p>No feedback given</p>
     )
   }
   return (
