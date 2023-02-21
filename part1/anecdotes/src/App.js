@@ -7,7 +7,7 @@ const Button = ({ text, onClick }) => {
 }
 // component max votes
 const MaxVotes = ({ points, anecdotes }) => {
-  var result = points.indexOf(Math.max(...points));
+  var result = points.indexOf(Math.max(...points)); // src https://java2blog.com/get-index-of-max-value-array-javascript/
   //console.log(result)
   return (
     <p>{anecdotes[result]}</p>
@@ -27,7 +27,7 @@ const App = () => {
   ]
   // Define our states
   const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(new Uint8Array(anecdotes.length)) //new Uint8Array(anecdotes.length)
+  const [points, setPoints] = useState(new Uint8Array(anecdotes.length)) //src https://stackoverflow.com/questions/20222501/how-to-create-a-zero-filled-javascript-array-of-arbitrary-length/22209781
 
   // Function to increase the score of the displayed anecdote
   const vote = (selected) => {
