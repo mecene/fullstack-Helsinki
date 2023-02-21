@@ -1,7 +1,7 @@
 import { useState } from 'react'
-
-const Button = ({text, onClick}) => {
-  return(
+// Component button
+const Button = ({ text, onClick }) => {
+  return (
     <button onClick={onClick}> {text} </button>
   )
 }
@@ -17,14 +17,25 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+ // Define our states
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint8Array(anecdotes.length)) //new Uint8Array(anecdotes.length)
+
+// function to increase the score of the displayed anecdote
+  const vote = (selected) =>{
+    const pointsCopy = [...points]
+    pointsCopy[selected] += 1
+    setPoints(pointsCopy)
+    //console.log(points)
+  }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button text={'Next anecdote'} onClick={()=>setSelected(Math.floor(Math.random()*anecdotes.length))}/>
-      
+      <p>Has {points[selected]} votes</p>
+      <Button text={'Vote'} onClick={() => vote(selected)} />
+      <Button text={'Next anecdote'} onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} />
+
     </div>
   )
 }
