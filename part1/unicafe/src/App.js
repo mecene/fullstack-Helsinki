@@ -9,7 +9,12 @@ const Button = ({ handleClick, text }) => {
 }
 
 const Statistics = ({ value }) => {
-  //console.log(props)
+  console.log(value)
+  if ((value.good + value.neutral + value.bad) === 0) {
+    return (
+      <p>No value</p>
+    )
+  }
   return (
     <>
       <StatisticLine text={'Good '} value={value.good} />
@@ -25,12 +30,14 @@ const Statistics = ({ value }) => {
 const StatisticLine = ({ text, value }) => {
   //console.log(props)
   return (
-    <>
-      <tr>
-        <td>{text}</td>
-        <td>{value}</td>
-      </tr>
-    </>
+    <table>
+      <tbody>
+        <tr>
+          <td>{text}</td>
+          <td>{value}</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
 const App = () => {
