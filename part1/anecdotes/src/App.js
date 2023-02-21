@@ -5,6 +5,15 @@ const Button = ({ text, onClick }) => {
     <button onClick={onClick}> {text} </button>
   )
 }
+// component max votes
+  // function max votes
+  const MaxVotes = ({points, anecdotes}) => {
+    var result = points.indexOf(Math.max(...points));
+    //console.log(result)
+    return (
+     <p>{anecdotes[result]}</p>
+    )
+  }
 
 const App = () => {
   const anecdotes = [
@@ -17,25 +26,35 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
- // Define our states
+  // Define our states
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint8Array(anecdotes.length)) //new Uint8Array(anecdotes.length)
 
-// function to increase the score of the displayed anecdote
-  const vote = (selected) =>{
+  // Function to increase the score of the displayed anecdote
+  const vote = (selected) => {
     const pointsCopy = [...points]
     pointsCopy[selected] += 1
     setPoints(pointsCopy)
     //console.log(points)
   }
 
+  // Function to generate a new annecdote index ** todo -> prevent following duplicate
+  const randIndex = (anecdotes) => {
+    const indexNum = Math.floor(Math.random() * anecdotes.length)
+    return (
+      indexNum
+    )
+  }
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>Has {points[selected]} votes</p>
       <Button text={'Vote'} onClick={() => vote(selected)} />
-      <Button text={'Next anecdote'} onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} />
-
+      <Button text={'Next anecdote'} onClick={() => setSelected(randIndex(anecdotes))} />
+      <h2>Anecdote with most votes</h2>
+      <MaxVotes points={points} anecdotes={anecdotes} />
     </div>
   )
 }
