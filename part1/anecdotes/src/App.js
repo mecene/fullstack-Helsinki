@@ -6,14 +6,13 @@ const Button = ({ text, onClick }) => {
   )
 }
 // component max votes
-  // function max votes
-  const MaxVotes = ({points, anecdotes}) => {
-    var result = points.indexOf(Math.max(...points));
-    //console.log(result)
-    return (
-     <p>{anecdotes[result]}</p>
-    )
-  }
+const MaxVotes = ({ points, anecdotes }) => {
+  var result = points.indexOf(Math.max(...points));
+  //console.log(result)
+  return (
+    <p>{anecdotes[result]}</p>
+  )
+}
 
 const App = () => {
   const anecdotes = [
