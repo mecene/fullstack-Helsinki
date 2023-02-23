@@ -26,11 +26,11 @@ const Course = ({ courses }) => {
             {courses.map((course) => {
                 //console.log(course.name);
                 return (
-                    <>
-                        <Header key={course.id} course={course} />
-                        <Content key={course.parts.id} parts={course.parts} />
+                    <div key={course.id}>
+                        <Header course={course} />
+                        <Content parts={course.parts} />
                         <strong>Total of <Total parts={course.parts} /> exercises</strong>
-                    </>
+                    </div>
                 )
 
             })}
