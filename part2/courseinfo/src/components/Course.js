@@ -11,8 +11,6 @@ const Content = ({ parts }) =>
 const Total = ({ parts }) => {
 
     return (parts.reduce((s, p) => s + p.exercises, 0))
-
-
 }
 
 const Course = ({ courses }) => {
@@ -37,9 +35,6 @@ const Course = ({ courses }) => {
         </>
     )
 }
-
-
-
 
 // export Es6 module 
 export default Course
