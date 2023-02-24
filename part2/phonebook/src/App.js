@@ -9,17 +9,20 @@ const App = () => {
   const handleNewName = (e) => {
     setNewName(e.target.value)
   }
-
+  
   const addPerson = (e) => {
     e.preventDefault()
-    console.log(newName)
     const newObject = {
       name: newName
     }
-    setPersons(persons.concat(newObject))
+    //filter trough array to find value
+    const alreadyExist = persons.filter(person => person.name === newName).length > 0
+    // ternary operator to return boolean if name exist
+    alreadyExist ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(newObject))
+    // reset input value
     setNewName('')
   }
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
