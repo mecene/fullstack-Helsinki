@@ -3,27 +3,23 @@ import { useState } from 'react'
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas' }
-  ]) 
+  ])
   const [newName, setNewName] = useState('')
 
-  const handleNewName = (e)=>{
+  const handleNewName = (e) => {
     setNewName(e.target.value)
   }
 
-  const addPerson = (e)=> {
-
+  const addPerson = (e) => {
     e.preventDefault()
     console.log(newName)
     const newObject = {
       name: newName
     }
-
     setPersons(persons.concat(newObject))
     setNewName('')
-
   }
-
-
+  
   return (
     <div>
       <h2>Phonebook</h2>
@@ -36,8 +32,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person=> <ul key={person.name}>{person.name}</ul> )}
-    
+      {persons.map(person => <ul key={person.name}>{person.name}</ul>)}
     </div>
   )
 }
