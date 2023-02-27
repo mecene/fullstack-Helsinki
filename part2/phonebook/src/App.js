@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import PersonForm from "./components/PersonForm"
+import Persons from "./components/Persons"
+import Filter from "./components/Filter"
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -11,58 +14,41 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
 
-
-  const handleNewName = (e) => setNewName(e.target.value)
-  const handleNewNumber = (e) => setNewNumber(e.target.value)
-  const handleChange = (e) => {
-    // find the person that includes the inputs value 
-    setSearch(e.target.value.toLowerCase())
-  }
-
-  const addPerson = (e) => {
-    e.preventDefault()
-    const newObject = {
-      name: newName,
-      number: newNumber,
-      //id: persons.length + 1
+  const handleForm = {
+    handleNewName: (e) => setNewName(e.target.value),
+    handleNewNumber: (e) => setNewNumber(e.target.value),
+    addPerson: (e) => {
+      e.preventDefault()
+      const newObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length + 1
+      }
+      //filter trough array to find value
+      const alreadyExist = persons.filter(person => person.name === newName).length > 0
+      // ternary operator to return boolean if name exist
+      alreadyExist ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(newObject))
+      // reset input value
+      setNewName('')
+      setNewNumber('')
     }
-    //filter trough array to find value
-    const alreadyExist = persons.filter(person => person.name === newName).length > 0
-    // ternary operator to return boolean if name exist
-    alreadyExist ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(newObject))
-    // reset input value
-    setNewName('')
-    setNewNumber('')
   }
+  // set the state of search to the input value (lower case)
+  const handleChange = (e) => setSearch(e.target.value.toLowerCase()) 
+
   //conditionel of collection to show if searched
   const personsToShow = search.length > 0
     ? persons.filter(person => person.name.toLowerCase().includes(search))
     : persons
-    
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown with:
-        <input type="text" onChange={handleChange} />
-      </div>
+      <Filter handleChange={handleChange}/>
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input onChange={handleNewName} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={handleNewNumber} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit" >add</button>
-        </div>
-      </form>
+      <PersonForm handleForm={handleForm} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <ul>
-        {personsToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
-      </ul>
-
+      <Persons persons={personsToShow} />
     </div>
   )
 }
