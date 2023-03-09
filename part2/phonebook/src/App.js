@@ -1,18 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
 import Filter from "./components/Filter"
+import axios from "axios"
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+
+  // get data from server with axios -> get trigers promises then is the event handeler
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
 
   const handleForm = {
     handleNewName: (e) => setNewName(e.target.value),
@@ -34,7 +39,7 @@ const App = () => {
     }
   }
   // set the state of search to the input value (lower case)
-  const handleChange = (e) => setSearch(e.target.value.toLowerCase()) 
+  const handleChange = (e) => setSearch(e.target.value.toLowerCase())
 
   //conditionel of collection to show if searched
   const personsToShow = search.length > 0
@@ -44,7 +49,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter handleChange={handleChange}/>
+      <Filter handleChange={handleChange} />
       <h2>Add a new</h2>
       <PersonForm handleForm={handleForm} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
