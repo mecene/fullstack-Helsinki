@@ -20,6 +20,7 @@ const App = () => {
       })
   }, [])
 
+
   // save new added contact
   const handleForm = {
     handleNewName: (e) => setNewName(e.target.value),
@@ -31,11 +32,15 @@ const App = () => {
         number: newNumber,
         //id: persons.length + 1 // server manage assignment of ID
       }
-      //filter trough array to find value
-      const alreadyExist = persons.filter(person => person.name === newName).length > 0
-      // ternary operator to return boolean if name exist
-      alreadyExist
-        ? alert(`${newName} is already added to phonebook`)
+      //find the name already exist
+      const foundPerson = persons.find(person => person.name === newName)
+
+      foundPerson
+        ? window.confirm(`${foundPerson.name} is already added to the phonebook, replace the old number with the new one?`)
+          ? personService
+            .update(foundPerson.id, newObject)
+            .then(response => setPersons(persons.map(person => person.id === response.id ? { ...person, number: newNumber } : person)))  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
+          : console.log('user denied request')
         : personService
           .create(newObject)
           .then(returnedPerson => setPersons(persons.concat(returnedPerson))) //setPersons(persons.concat(newObject))
