@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
 import Filter from "./components/Filter"
-import axios from "axios"
+import personService from "./services/persons.js"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,12 +10,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
 
-  // get data from server with axios -> get trigers promises then is the event handeler
+  // get data from server with service persons -> get trigers promises then is the event handeler
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(returnedAllPersons => setPersons(returnedAllPersons))
+      .catch(error => {
+        console.log('Failed to load ressources');
       })
   }, [])
 
@@ -35,9 +36,9 @@ const App = () => {
       // ternary operator to return boolean if name exist
       alreadyExist 
         ? alert(`${newName} is already added to phonebook`) 
-        : axios
-          .post('http://localhost:3001/persons', newObject)
-          .then(response => setPersons(persons.concat(response.data))) //setPersons(persons.concat(newObject))
+        : personService
+          .create(newObject)
+          .then(returnedPerson => setPersons(persons.concat(returnedPerson))) //setPersons(persons.concat(newObject))
       // reset input value
       setNewName('')
       setNewNumber('')
