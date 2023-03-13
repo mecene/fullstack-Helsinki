@@ -29,13 +29,13 @@ const App = () => {
       const newObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1
+        //id: persons.length + 1 // server manage assignment of ID
       }
       //filter trough array to find value
       const alreadyExist = persons.filter(person => person.name === newName).length > 0
       // ternary operator to return boolean if name exist
-      alreadyExist 
-        ? alert(`${newName} is already added to phonebook`) 
+      alreadyExist
+        ? alert(`${newName} is already added to phonebook`)
         : personService
           .create(newObject)
           .then(returnedPerson => setPersons(persons.concat(returnedPerson))) //setPersons(persons.concat(newObject))
@@ -52,6 +52,20 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(search))
     : persons
 
+  // remove the clicked item from list
+  const handleRemove = (id) => {
+    personService
+      .deleteItem(id)
+      .then(response => {
+        //console.log('item deleted')
+        setPersons(persons.filter(person => person.id !== id))//filter return a new object of the persons except the one deleted
+      })
+      .catch(error => {
+        console.error(`ERROR : ${error}`)
+      })
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -59,7 +73,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm handleForm={handleForm} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onClick={handleRemove} />
     </div>
   )
 }
