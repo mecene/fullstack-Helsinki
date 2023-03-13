@@ -19,6 +19,7 @@ const App = () => {
       })
   }, [])
 
+  // save new added contact
   const handleForm = {
     handleNewName: (e) => setNewName(e.target.value),
     handleNewNumber: (e) => setNewNumber(e.target.value),
@@ -32,7 +33,11 @@ const App = () => {
       //filter trough array to find value
       const alreadyExist = persons.filter(person => person.name === newName).length > 0
       // ternary operator to return boolean if name exist
-      alreadyExist ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(newObject))
+      alreadyExist 
+        ? alert(`${newName} is already added to phonebook`) 
+        : axios
+          .post('http://localhost:3001/persons', newObject)
+          .then(response => setPersons(persons.concat(response.data))) //setPersons(persons.concat(newObject))
       // reset input value
       setNewName('')
       setNewNumber('')
