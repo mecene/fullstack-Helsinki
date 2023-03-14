@@ -2,21 +2,24 @@ import { useState, useEffect } from 'react'
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
 import Filter from "./components/Filter"
-import personService from "./services/persons.js"
+import PersonService from "./services/persons.js"
+import Notification from "./components/Notification"
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [message, setMessage] = useState(null)
+  const [isSuccess, setIsSuccess] = useState(true)
 
   // get data from server with service persons -> get trigers promises then is the event handeler
   useEffect(() => {
-    personService
+    PersonService
       .getAll()
       .then(returnedAllPersons => setPersons(returnedAllPersons))
       .catch(error => {
-        console.log('Failed to load ressources');
+        console.log('Failed to load ressources')
       })
   }, [])
 
@@ -37,13 +40,34 @@ const App = () => {
 
       foundPerson
         ? window.confirm(`${foundPerson.name} is already added to the phonebook, replace the old number with the new one?`)
-          ? personService
+
+          ? PersonService
             .update(foundPerson.id, newObject)
-            .then(response => setPersons(persons.map(person => person.id === response.id ? { ...person, number: newNumber } : person)))  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
-          : console.log('user denied request')
-        : personService
+            .then(response =>
+              setPersons(persons.map(person => person.id === response.id
+                ? { ...person, number: newNumber }
+                : person))
+            )  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
+            .catch(error => {
+              setMessage(`Information of ${newObject.name} has already been removed from the server`)
+              setIsSuccess(false)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+            })
+          : console.log('User denied request')
+        // if the persone doesn't exist, register data in DB
+        : PersonService
           .create(newObject)
-          .then(returnedPerson => setPersons(persons.concat(returnedPerson))) //setPersons(persons.concat(newObject))
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setMessage(`${returnedPerson.name} has been successfully saved`)
+            setIsSuccess(true)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+          }) //setPersons(persons.concat(newObject))
+
       // reset input value
       setNewName('')
       setNewNumber('')
@@ -59,14 +83,16 @@ const App = () => {
 
   // remove the clicked item from list
   const handleRemove = (id) => {
-    personService
+    PersonService
       .deleteItem(id)
       .then(response => {
         //console.log('item deleted')
         setPersons(persons.filter(person => person.id !== id))//filter return a new object of the persons except the one deleted
       })
       .catch(error => {
-        console.error(`ERROR : ${error}`)
+        //console.error(`ERROR : ${error}`)
+        setMessage(`ERROR : ${error}`)
+        setIsSuccess(false)
       })
   }
 
@@ -74,6 +100,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} notificationStyle={isSuccess} />
       <Filter handleChange={handleChange} />
       <h2>Add a new</h2>
       <PersonForm handleForm={handleForm} newName={newName} newNumber={newNumber} />
