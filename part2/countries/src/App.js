@@ -14,7 +14,6 @@ function App() {
   const baseUrlWeather = `https://api.openweathermap.org/data/2.5/weather?appid=${api_key}` //&q=London
 
 
-
   useEffect(() => {
     axios
       .get(baseUrl)
