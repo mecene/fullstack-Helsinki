@@ -43,12 +43,16 @@ const App = () => {
 
           ? PersonService
             .update(foundPerson.id, newObject)
-            .then(response =>
-              setPersons(persons.map(person => person.id === response.id
-                ? { ...person, number: newNumber }
-                : person))
-            )  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
+            .then(response => {
+              setPersons(persons.map(person => person.id === response.id ? { ...person, number: newNumber }: person))
+              setMessage(`${newObject.name} number has been succesfully updated`)
+              setIsSuccess(true)
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+            })  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
             .catch(error => {
+              console.log(error)
               setMessage(`Information of ${newObject.name} has already been removed from the server`)
               setIsSuccess(false)
               setTimeout(() => {
