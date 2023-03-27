@@ -59,14 +59,17 @@ const App = () => {
         // if the persone doesn't exist, register data in DB
         : PersonService
           .create(newObject)
-          .then(returnedPerson => {
-            setPersons(persons.concat(returnedPerson))
-            setMessage(`${returnedPerson.name} has been successfully saved`)
+          .then(response => {
+            setPersons(persons.concat(newObject))
+            setMessage(`${newObject.name} has been successfully saved`)
             setIsSuccess(true)
             setTimeout(() => {
               setMessage(null)
             }, 5000)
           }) //setPersons(persons.concat(newObject))
+          .catch((error) => {
+            console.error(error);
+          });
 
       // reset input value
       setNewName('')
