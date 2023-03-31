@@ -5,6 +5,7 @@ import Filter from "./components/Filter"
 import PersonService from "./services/persons.js"
 import Notification from "./components/Notification"
 
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -45,19 +46,11 @@ const App = () => {
             .update(foundPerson.id, newObject)
             .then(response => {
               setPersons(persons.map(person => person.id === response.id ? { ...person, number: newNumber }: person))
-              setMessage(`${newObject.name} number has been succesfully updated`)
-              setIsSuccess(true)
-              setTimeout(() => {
-                setMessage(null)
-              }, 5000)
+              flashMessage(`${newObject.name} number has been succesfully updated`, true, 5000)
             })  // https://stackoverflow.com/questions/44524121/update-array-containing-objects-using-spread-operator
             .catch(error => {
               console.log(error)
-              setMessage(`Information of ${newObject.name} has already been removed from the server`)
-              setIsSuccess(false)
-              setTimeout(() => {
-                setMessage(null)
-              }, 5000)
+              flashMessage(`Information of ${newObject.name} has already been removed from the server`, false, 5000)
             })
           : console.log('User denied request')
         // if the persone doesn't exist, register data in DB
@@ -65,15 +58,11 @@ const App = () => {
           .create(newObject)
           .then(response => {
             setPersons(persons.concat(newObject))
-            setMessage(`${newObject.name} has been successfully saved`)
-            setIsSuccess(true)
-            setTimeout(() => {
-              setMessage(null)
-            }, 5000)
+            flashMessage(`${newObject.name} has been successfully saved`, true, 5000)
           }) //setPersons(persons.concat(newObject))
-          .catch((error) => {
-            console.error(error);
-          });
+          .catch(error => {
+            flashMessage(error.response.data.error, false, 5000)
+          })
 
       // reset input value
       setNewName('')
@@ -102,7 +91,15 @@ const App = () => {
         setIsSuccess(false)
       })
   }
-
+  //function to handle flash messages
+  const flashMessage = (message, success, timeout) => {
+    setMessage(message)
+    setIsSuccess(success)
+    setTimeout(() => {
+      setMessage(null)
+    }, timeout)
+  }
+  
 
   return (
     <div>
